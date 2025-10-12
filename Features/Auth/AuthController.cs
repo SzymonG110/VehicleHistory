@@ -13,28 +13,41 @@ public class AuthController(IAuthService authService) : ControllerBase
     public async Task<IActionResult> Register([FromBody] AuthRegisterDto data)
     {
         var deviceData = this.GenerateDeviceData();
-        var token = await authService.RegisterAsync(data, deviceData);
+        var tokens = await authService.RegisterAsync(data, deviceData);
         
-        if (token == null)
+        if (tokens == null)
         {
             return BadRequest("User already exists or passwords do not match");    
         }
         
-        return Ok(token);
+        return Ok(tokens);
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] AuthLoginDto data)
     {
         var deviceData = this.GenerateDeviceData();
-        var token = await authService.LoginAsync(data, deviceData);
+        var tokens = await authService.LoginAsync(data, deviceData);
         
-        if (token == null)
+        if (tokens == null)
         {
             return BadRequest("Invalid credentials");
         }
         
-        return Ok(token);
+        return Ok(tokens);
+    }
+
+    [HttpPost("refresh")]
+    public async Task<IActionResult> RefreshToken([FromBody] AuthRefreshTokenDto data)
+    {
+        var tokens = await authService.RefreshTokenAsync(data.RefreshToken);
+        
+        if (tokens == null)
+        {
+            return BadRequest("Invalid refresh token");
+        }
+        
+        return Ok(tokens);
     }
 
     private AuthDeviceData GenerateDeviceData()

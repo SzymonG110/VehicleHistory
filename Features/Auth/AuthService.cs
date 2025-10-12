@@ -61,6 +61,31 @@ public class AuthService(VehicleHistoryDbContext dbContext, IConfiguration confi
         return token;
     }
 
+    public async Task<AuthTokens?> RefreshTokenAsync(string refreshToken)
+    {
+        var session = dbContext.AuthSessions.FirstOrDefault(session => session.RefreshToken == refreshToken);
+        if (session == null || session.Expires < DateTime.UtcNow)
+        {
+            return null;
+        }
+        
+        var user = dbContext.Users.FirstOrDefault(user => user.Id == session.UserId);
+        if (user == null)
+        {
+            return null;
+        }
+
+        var tokens = CreateTokens(user);
+        
+        session.RefreshToken = tokens.RefreshToken;
+        session.Expires = DateTime.UtcNow.AddDays(this.REFRESH_TOKEN_EXPIRATION_IN_DAYS);
+        
+        dbContext.AuthSessions.Update(session);
+        await dbContext.SaveChangesAsync();
+        
+        return tokens;
+    }
+
     private AuthTokens CreateTokens(User user)
     {
         var tokens = new AuthTokens
