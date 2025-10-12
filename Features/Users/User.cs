@@ -3,7 +3,6 @@ using VehicleHistory.Features.Auth;
 
 namespace VehicleHistory.Features.Users;
 
-[Table("users")]
 public class User
 {
     public Guid Id { get; set; }

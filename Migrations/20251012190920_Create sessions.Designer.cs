@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using VehicleHistory.Data;
@@ -11,9 +12,11 @@ using VehicleHistory.Data;
 namespace VehicleHistory.Migrations
 {
     [DbContext(typeof(VehicleHistoryDbContext))]
-    partial class VehicleHistoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251012190920_Create sessions")]
+    partial class Createsessions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,7 +80,7 @@ namespace VehicleHistory.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("users");
                 });
 
             modelBuilder.Entity("VehicleHistory.Features.Vehicles.Vehicle", b =>
@@ -99,7 +102,7 @@ namespace VehicleHistory.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Vehicles");
+                    b.ToTable("vehicles");
                 });
 
             modelBuilder.Entity("VehicleHistory.Features.Auth.AuthSession", b =>
