@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,10 @@ namespace VehicleHistory.Features.Auth;
 
 public class AuthService(VehicleHistoryDbContext dbContext, IConfiguration configuration) : IAuthService
 {
-    public async Task<AuthTokensDto?> RegisterAsync(AuthRegisterDto data)
+    private readonly int ACCESS_TOKEN_EXPIRATION_IN_MINUTES = 3;
+    private readonly int REFRESH_TOKEN_EXPIRATION_IN_DAYS = 7;
+    
+    public async Task<AuthTokens?> RegisterAsync(AuthRegisterDto data, AuthDeviceData deviceData)
     {
         var isUser = await dbContext.Users.FirstOrDefaultAsync(user => user.Email == data.Email) != null;
         if (isUser)
@@ -37,10 +41,12 @@ public class AuthService(VehicleHistoryDbContext dbContext, IConfiguration confi
         
         var token = CreateTokens(user);
         
+        await CreateSession(user.Id, deviceData, token);
+        
         return token;
     }
 
-    public async Task<AuthTokensDto?> LoginAsync(AuthLoginDto data)
+    public async Task<AuthTokens?> LoginAsync(AuthLoginDto data, AuthDeviceData deviceData)
     {
         var user = await dbContext.Users.FirstOrDefaultAsync(user => user.Email == data.Email);
         if (user == null || new PasswordHasher<User>().VerifyHashedPassword(user, user.Password, data.Password) == PasswordVerificationResult.Failed)
@@ -50,15 +56,17 @@ public class AuthService(VehicleHistoryDbContext dbContext, IConfiguration confi
         
         var token = CreateTokens(user);
         
+        await CreateSession(user.Id, deviceData, token);
+        
         return token;
     }
 
-    private AuthTokensDto CreateTokens(User user)
+    private AuthTokens CreateTokens(User user)
     {
-        var tokens = new AuthTokensDto
+        var tokens = new AuthTokens
         {
-            accessToken = CreateToken(user),
-            refreshToken = ""
+            AccessToken = CreateToken(user),
+            RefreshToken = CreateRefreshToken()
         };
         
         return tokens;
@@ -79,10 +87,35 @@ public class AuthService(VehicleHistoryDbContext dbContext, IConfiguration confi
             issuer: configuration["Jwt:Issuer"],
             audience: configuration["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddDays(1),
+            expires: DateTime.UtcNow.AddMinutes(this.ACCESS_TOKEN_EXPIRATION_IN_MINUTES),
             signingCredentials: credentials
         );
         
         return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
+    }
+
+    private string CreateRefreshToken()
+    {
+        var randomNumber = new byte[32];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
+    }
+    
+    private async Task CreateSession(Guid userId, AuthDeviceData deviceData, AuthTokens tokens)
+    {
+        var refreshTokenExpires = DateTime.UtcNow.AddDays(this.REFRESH_TOKEN_EXPIRATION_IN_DAYS);
+
+        var authSession = new AuthSession
+        {
+            UserId = userId,
+            RefreshToken = tokens.RefreshToken,
+            Expires = refreshTokenExpires,
+            Ip = deviceData.Ip,
+            Device = deviceData.Device
+        };
+        
+        dbContext.AuthSessions.Add(authSession);
+        await dbContext.SaveChangesAsync();
     }
 }

@@ -2,6 +2,6 @@ namespace VehicleHistory.Features.Auth;
 
 public interface IAuthService
 {
-    Task<AuthTokensDto?> RegisterAsync(AuthRegisterDto data);
-    Task<AuthTokensDto?> LoginAsync(AuthLoginDto data);
+    Task<AuthTokens?> RegisterAsync(AuthRegisterDto data, AuthDeviceData deviceData);
+    Task<AuthTokens?> LoginAsync(AuthLoginDto data, AuthDeviceData deviceData);
 }
