@@ -11,7 +11,7 @@ namespace VehicleHistory.Features.Auth;
 
 public class AuthService(VehicleHistoryDbContext dbContext, IConfiguration configuration) : IAuthService
 {
-    public async Task<string?> RegisterAsync(AuthRegisterDto data)
+    public async Task<AuthTokensDto?> RegisterAsync(AuthRegisterDto data)
     {
         var isUser = await dbContext.Users.FirstOrDefaultAsync(user => user.Email == data.Email) != null;
         if (isUser)
@@ -35,12 +35,33 @@ public class AuthService(VehicleHistoryDbContext dbContext, IConfiguration confi
         dbContext.Users.Add(user);
         await dbContext.SaveChangesAsync();
         
-        return CreateToken(user);
+        var token = CreateTokens(user);
+        
+        return token;
     }
 
-    public async Task<string?> LoginAsync(AuthLoginDto data)
+    public async Task<AuthTokensDto?> LoginAsync(AuthLoginDto data)
     {
-        throw new NotImplementedException();
+        var user = await dbContext.Users.FirstOrDefaultAsync(user => user.Email == data.Email);
+        if (user == null || new PasswordHasher<User>().VerifyHashedPassword(user, user.Password, data.Password) == PasswordVerificationResult.Failed)
+        {
+            return null;
+        }
+        
+        var token = CreateTokens(user);
+        
+        return token;
+    }
+
+    private AuthTokensDto CreateTokens(User user)
+    {
+        var tokens = new AuthTokensDto
+        {
+            accessToken = CreateToken(user),
+            refreshToken = ""
+        };
+        
+        return tokens;
     }
 
     private string CreateToken(User user)
