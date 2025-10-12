@@ -101,7 +101,7 @@ public class AuthService(VehicleHistoryDbContext dbContext, IConfiguration confi
     {
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, "test")
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!));
