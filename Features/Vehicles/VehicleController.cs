@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VehicleHistory.Data;
 
@@ -9,6 +10,7 @@ namespace VehicleHistory.Features.Vehicles;
 public class VehicleController(VehicleHistoryDbContext dbContext, IMapper mapper) : ControllerBase
 {
     [HttpGet]
+    [Authorize]
     public IActionResult Get()
     {
         var vehicles = dbContext.Vehicles.ToList();
@@ -16,6 +18,7 @@ public class VehicleController(VehicleHistoryDbContext dbContext, IMapper mapper
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Post([FromBody] VehicleDto vehicle)
     {
         var vehicleEntity = mapper.Map<Vehicle>(vehicle);
