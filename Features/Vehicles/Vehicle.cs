@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace VehicleHistory.Features.Vehicles;
 
 public class Vehicle

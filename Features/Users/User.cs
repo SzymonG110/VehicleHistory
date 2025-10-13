@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using VehicleHistory.Features.Auth;
 
 namespace VehicleHistory.Features.Users;

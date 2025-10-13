@@ -1,16 +1,17 @@
+using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VehicleHistory.Data;
+using VehicleHistory.Features.Auth;
 
 namespace VehicleHistory.Features.Vehicles;
 
 [Route("api/[controller]")]
 [ApiController]
-public class VehicleController(VehicleHistoryDbContext dbContext, IMapper mapper) : ControllerBase
+public class VehicleController(VehicleHistoryDbContext dbContext, IMapper mapper) : AuthorizedControllerBase
 {
     [HttpGet]
-    [Authorize]
     public IActionResult Get()
     {
         var vehicles = dbContext.Vehicles.ToList();
@@ -18,7 +19,6 @@ public class VehicleController(VehicleHistoryDbContext dbContext, IMapper mapper
     }
 
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> Post([FromBody] VehicleDto vehicle)
     {
         var vehicleEntity = mapper.Map<Vehicle>(vehicle);
