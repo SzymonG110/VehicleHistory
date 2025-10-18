@@ -1,6 +1,6 @@
-using VehicleHistory.Features.Users;
+using VehicleHistory.Features.Users.Models;
 
-namespace VehicleHistory.Features.Auth;
+namespace VehicleHistory.Features.Auth.Models;
 
 public class AuthSession
 {

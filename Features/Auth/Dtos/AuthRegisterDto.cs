@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace VehicleHistory.Features.Auth;
+namespace VehicleHistory.Features.Auth.Dtos;
 
 public class AuthRegisterDto
 {

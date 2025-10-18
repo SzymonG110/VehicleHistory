@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using UAParser;
+using VehicleHistory.Features.Auth.Dtos;
+using VehicleHistory.Features.Auth.Models;
+using VehicleHistory.Features.Auth.Services;
 
-namespace VehicleHistory.Features.Auth;
+namespace VehicleHistory.Features.Auth.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

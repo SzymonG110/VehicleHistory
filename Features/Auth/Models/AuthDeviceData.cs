@@ -1,4 +1,4 @@
-namespace VehicleHistory.Features.Auth;
+namespace VehicleHistory.Features.Auth.Models;
 
 public class AuthDeviceData
 {

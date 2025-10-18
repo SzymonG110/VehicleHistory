@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace VehicleHistory.Features.Auth;
+namespace VehicleHistory.Features.Auth.Base;
 
 [Authorize]
 public abstract class AuthorizedControllerBase : ControllerBase

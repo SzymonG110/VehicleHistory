@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using VehicleHistory.Data;
-using VehicleHistory.Features.Auth;
-using VehicleHistory.Features.Users;
-using VehicleHistory.Features.Vehicles;
+using VehicleHistory.Features.Auth.Services;
+using VehicleHistory.Features.Users.Models;
+using VehicleHistory.Features.Vehicles.Controllers;
+using VehicleHistory.Features.Vehicles.Dtos;
+using VehicleHistory.Features.Vehicles.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

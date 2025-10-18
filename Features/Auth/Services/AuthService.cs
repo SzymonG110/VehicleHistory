@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using VehicleHistory.Data;
-using VehicleHistory.Features.Users;
+using VehicleHistory.Features.Auth.Dtos;
+using VehicleHistory.Features.Auth.Models;
+using VehicleHistory.Features.Users.Models;
 
-namespace VehicleHistory.Features.Auth;
+namespace VehicleHistory.Features.Auth.Services;
 
 public class AuthService(VehicleHistoryDbContext dbContext, IConfiguration configuration) : IAuthService
 {

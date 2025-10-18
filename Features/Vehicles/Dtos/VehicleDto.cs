@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace VehicleHistory.Features.Vehicles;
+namespace VehicleHistory.Features.Vehicles.Dtos;
 
 public class VehicleDto
 {

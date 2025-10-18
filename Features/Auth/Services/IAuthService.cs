@@ -1,4 +1,7 @@
-namespace VehicleHistory.Features.Auth;
+using VehicleHistory.Features.Auth.Dtos;
+using VehicleHistory.Features.Auth.Models;
+
+namespace VehicleHistory.Features.Auth.Services;
 
 public interface IAuthService
 {
