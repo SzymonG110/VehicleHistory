@@ -9,6 +9,7 @@ using VehicleHistory.Features.Users.Models;
 using VehicleHistory.Features.Vehicles.Controllers;
 using VehicleHistory.Features.Vehicles.Dtos;
 using VehicleHistory.Features.Vehicles.Models;
+using VehicleHistory.Features.Vehicles.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,12 +28,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IVehicleService, VehicleService>();
 
 builder.Services.AddControllers();
 
 builder.Services.AddOpenApi();
-
-builder.Services.AddAutoMapper(cfg => { cfg.CreateMap<VehicleDto, Vehicle>(); });
 
 builder.Services.AddDbContext<VehicleHistoryDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DatabaseConnection")));
