@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using VehicleHistory.Data;
 using VehicleHistory.Features.Auth.Services;
 using VehicleHistory.Features.Users.Models;
+using VehicleHistory.Features.Users.Services;
 using VehicleHistory.Features.Vehicles.Controllers;
 using VehicleHistory.Features.Vehicles.Dtos;
 using VehicleHistory.Features.Vehicles.Models;
@@ -28,6 +29,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 
 builder.Services.AddControllers();
